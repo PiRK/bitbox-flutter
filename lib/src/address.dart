@@ -71,10 +71,32 @@ class Address {
     return cashAddress;
   }
 
+  /// Converts legacy address to ecash address
+  static String toECashAddress(String legacyAddress,
+      [bool includePrefix = true]) {
+    final decoded = Address._decodeLegacyAddress(legacyAddress);
+    String prefix = "";
+    if (includePrefix) {
+      switch (decoded["version"]) {
+        case Network.bchPublic:
+          prefix = "ecash";
+          break;
+        case Network.bchTestnetPublic:
+          prefix = "ectest";
+          break;
+        default:
+          throw FormatException("Unsupported address format: $legacyAddress");
+      }
+    }
+
+    final cashAddress = Address._encode(prefix, "P2PKH", decoded["hash"]);
+    return cashAddress;
+  }
+
   /// Converts cashAddr format to legacy address
   static String toLegacyAddress(String cashAddress) {
     final decoded = _decodeCashAddress(cashAddress);
-    final testnet = decoded['prefix'] == "bchtest";
+    final testnet = decoded['prefix'] == "bchtest" || decoded['prefix'] == "ectest";
 
     final version = !testnet ? Network.bchPublic : Network.bchTestnetPublic;
     return toBase58Check(decoded["hash"], version);
@@ -228,7 +250,7 @@ class Address {
       address = pieces.last;
     } else if (pieces.length == 1) {
       // if it came without separator, try all three possible formats
-      prefixes = <String>["bitcoincash", "bchtest", "bchreg"];
+      prefixes = <String>["bitcoincash", "bchtest", "bchreg", "ecash", "ectest", "ecregtest"];
     } else {
       // if it came with more than one separator, throw a format exception
       throw FormatException("Invalid Address Format: $address");

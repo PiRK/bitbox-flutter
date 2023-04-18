@@ -138,6 +138,28 @@ void main() {
     }
   });
 
+  test('Converting legacy to/from ecash cashAddr', () {
+    final legacyP2pkh = "15e15hWo6CShMgbAfo8c2Ykj4C6BLq6Not";
+    final ecashP2pkh = "ecash:qqedlas654qj2gdyqhf7vadt02kxnw4r6gz3959t52";
+    expect(Bitbox.Address.toECashAddress(legacyP2pkh), ecashP2pkh);
+    expect(Bitbox.Address.toLegacyAddress(ecashP2pkh), legacyP2pkh);
+
+    final legacyP2sh = '35PBEaofpUeH8VnnNSorM1QZsadrZoQp4N';
+    final ecashP2sh = "ecash:pq5gpjwv6w2cr6npspf62kzg23fw35dcpvdkkxhhl5";
+    expect(Bitbox.Address.toECashAddress(legacyP2sh), ecashP2sh);
+    expect(Bitbox.Address.toLegacyAddress(ecashP2sh), legacyP2sh);
+
+    final legacyP2pkhTestnet = "mipcBbFg9gMiCh81Kj8tqqdgoZub1ZJRfn";
+    final ecashP2pkhTestnet = "ectest:qqjr7yu573z4faxw8ltgvjwpntwys08fysdmsw9v6r";
+    expect(Bitbox.Address.toECashAddress(legacyP2pkhTestnet), ecashP2pkhTestnet);
+    expect(Bitbox.Address.toLegacyAddress(ecashP2pkhTestnet), legacyP2pkhTestnet);
+
+    final legacyP2shTestnet = "2MzQwSSnBHWHqSAqtTVQ6v47XtaisrJa1Vc";
+    final ecashP2shTestnet = "ectest:pp8f7ww2g6y07ypp9r4yendrgyznysc9kqar53xw7t";
+    expect(Bitbox.Address.toECashAddress(legacyP2shTestnet), ecashP2shTestnet);
+    expect(Bitbox.Address.toLegacyAddress(ecashP2shTestnet), legacyP2shTestnet);
+  }
+
   test('BIP21 test', () {
     final address = 'bitcoincash:qrdsfshx7yzfjl9sfj2khuja5crcu4vaxqrt2qkz5s';
 
